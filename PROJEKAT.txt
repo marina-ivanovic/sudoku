@@ -1,0 +1,49 @@
+==========================OOP PROJEKAT - SUDOKU==============================
+-STRUKTURE:
+ -Sudoku - cuva podatke o trenutnom stanju sudoku tabele, metode za provera-
+	vanje da li su pravila ispostovana, generisanje nove tabele,
+	printovanje stanja, mozda bih ovde stavila broj tacnih poteza, neta-
+	cnih, broj igre
+ -Igra - sadrzi metode vezane za igru, metode da kompjuter resi, metode koje
+	omogucavaju korisniku da resi, ucitavanje datoteke i nama se u igri
+	formira struktura Sudoku, cuva statistiku, korisnicke opcije
+ -Pomocna struktura za rukovanje datotekama??? nisam sigurna hoce li mi tre-
+	bati - funcija za parsiranje sudoku table (u oba pravca)
+ -Po potrebi, struktura Kompjuter u koju bih stavila metode pomocu kojih
+	kompjuter resava sudoku
+
+-STRUKTURA DATOTEKE I PRINT SUDOKU: (tacke predstavljaju brojeve, u datoteci
+					bez | - i +, umesto nepostojecih 0)
+ 1 2 3 | . . . | . . .
+ . . . | . . . | . . .
+ . . . | . . . | . . .
+ - - - + - - - + - - -
+ 1 2 3 | . . . | . . .
+ . . . | . . . | . . .
+ . . . | . . . | . . .
+ - - - + - - - + - - -
+ 1 2 3 | . . . | . . .
+ . . . | . . . | . . .
+ . . . | . . . | . . .
+
+-FUNKCIONALNOSTI:
+ -> PROVERA ISPRAVNOSTI:
+	-na kraju igre, kada korisnik popuni
+	-red, kolona, i podmatrica 3x3 ne smeju da imaju 2 ista broja
+ -> AUTOMATSKO RESENJE:
+	-naci neki algoritam na internetu
+	-provera ispravnosti na kraju takodje (testiranja radi)
+ -> POSTAVKA ZAGONETKE:
+	-u svakoj podmatrici ne vise od 6 brojeva
+	-od vec popunjene matrice brisemo 3 ili vise polja
+ -> ISPIS INFORMACIJA NA KRAJU IGRE:
+	-znaci prvo ispisemo da li je dobro popunio sudoku
+	-dok igra, gledamo da li je taj unos dobar ili los, dodajemo na ova
+	dva broja (samo me buni da li treba da bude trenutno dobar/los unos
+	ili dobar/los unos za krajnje resenje, u tom slucaju ne znam kako
+	da gledam)
+
+NOTES:
+ - naci algoritam za resavanje i optimizaciju
+ - generisanje postavke - rekurzivni algoritam, metoda eliminacije, kombina-
+	torika, rukovanje permutacijama
