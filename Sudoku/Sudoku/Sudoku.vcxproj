@@ -149,6 +149,9 @@
     <ClCompile Include="Sudoku9.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Computer.h" />
+    <ClInclude Include="FileHandler.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Sudoku9.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

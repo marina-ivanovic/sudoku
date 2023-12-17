@@ -23,5 +23,14 @@
     <ClInclude Include="Sudoku9.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Computer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
