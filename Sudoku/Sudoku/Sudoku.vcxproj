@@ -146,13 +146,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sudoku9.cpp" />
+    <ClCompile Include="FileHandler.cpp" />
+    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Sudoku.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Computer.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Sudoku9.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Sudoku.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

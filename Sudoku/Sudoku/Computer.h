@@ -1,8 +1,6 @@
-#include "Sudoku9.h"
-class Computer {
-private:
-	Sudoku* sudoku;
-	//tbd other attributes
+#include "Game.h"
+class Computer: public Game {
 public:
 	//depends on the algorithm i choose
+	void startGame() override;
 };
