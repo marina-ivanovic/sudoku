@@ -1,26 +1,27 @@
 #ifndef SUDOKU_H
 #define SUDOKU_H
 #include "Constants.h"
+#include <vector>
 
 class Sudoku {
 private:
-	int matrix[N][N];
+	std::vector<std::vector<int>> matrix;
 	int correctInput;
 	int incorrectInput;
 	int gamesPlayed;
 
 public:
-	//Constructors
+	// Constructors
 	Sudoku();
-	Sudoku(int m[N][N]);
+	Sudoku(const std::vector<std::vector<int>>& m);
 
-	//Getters and setters
-	const int(&getMatrix() const)[N][N];
+	// Getters and setters
+	const std::vector<std::vector<int>>& getMatrix() const;
 	void setValue(int row, int col, int value);
 	int getCorrectInput() const;
 	int getIncorrectInput() const;
 	int getGamesPlayed() const;
 
-    const void displayBoard();
+	void displayBoard();
 };
 #endif // SUDOKU_H

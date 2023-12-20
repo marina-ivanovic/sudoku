@@ -11,16 +11,21 @@ bool FileHandler::loadSudokuFromFile(const std::string& filename, Sudoku& sudoku
 		return false;
 	}
 
+	std::vector<std::vector<int>> board;
 	int value;
 	for (int i = 0; i < 9; ++i) {
+		std::vector<int> row;
 		for (int j = 0; j < 9; ++j) {
 			if (!(file >> value)) {
 				std::cerr << "Error reading Sudoku values from file" << std::endl;
 				return false;
 			}
-			sudoku.setValue(i, j, value);
+			row.push_back(value);
 		}
+		board.push_back(row);
 	}
+
+	sudoku = Sudoku(board); // Update the Sudoku object with the loaded board
 
 	file.close();
 	return true;

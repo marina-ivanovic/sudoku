@@ -3,23 +3,14 @@
 #include "Constants.h"
 
 Sudoku::Sudoku() : correctInput(0), incorrectInput(0), gamesPlayed(0) {
-	for (int i = 0; i < N; ++i) {
-		for (int j = 0; j < N; ++j) {
-			matrix[i][j] = 0;
-		}
-	}
+	matrix = std::vector<std::vector<int>>(N, std::vector<int>(N, 0));
 }
 
-Sudoku::Sudoku(int m[N][N]) : correctInput(0), incorrectInput(0), gamesPlayed(0) {
-	for (int i = 0; i < N; ++i) {
-		for (int j = 0; j < N; ++j) {
-			matrix[i][j] = m[i][j];
-		}
-	}
-};
+Sudoku::Sudoku(const std::vector<std::vector<int>>& m) : correctInput(0), incorrectInput(0), gamesPlayed(0) {
+	matrix = m;
+}
 
-// Implementation of getters and setters
-const int(&Sudoku::getMatrix() const)[9][9]{
+const std::vector<std::vector<int>>& Sudoku::getMatrix() const {
 	return matrix;
 }
 
@@ -39,8 +30,7 @@ int Sudoku::getGamesPlayed() const {
 	return gamesPlayed;
 }
 
-// Implementation of displayBoard method
-const void Sudoku::displayBoard() {
+void Sudoku::displayBoard() {
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
 			std::cout << matrix[i][j] << " ";
@@ -49,7 +39,7 @@ const void Sudoku::displayBoard() {
 			}
 		}
 		std::cout << std::endl;
-		if (i%3==2 && i != 8) {
+		if (i % 3 == 2 && i != 8) {
 			std::cout << "- - - + - - - + - - -";
 			std::cout << std::endl;
 		}
