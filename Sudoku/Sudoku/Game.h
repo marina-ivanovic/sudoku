@@ -2,10 +2,9 @@
 #define GAME_H
 #include "Sudoku.h"
 class Game {
-protected:
-	Sudoku* sudoku;
 public:
-	Game();
+	Sudoku* sudoku;
+	Game(Sudoku* sudokuObj);
 
 	virtual void startGame();
 	void endGame();
@@ -20,10 +19,15 @@ public:
 	//Generative functions
 	void eraseSudoku();
 	void fillSudoku();
+	void fillDiagonalBoxes();
+	bool fillRemainingBoxes(int row, int col);
+	void fillBox(int startRow, int startCol);
 	void generateSudoku();
-	const bool Game::solveSudoku(int row, int col);
+	const bool solveSudoku(int row, int col);
 
 	//Helper functions
 	const bool isEmpty(int row, int col);
+	const int numOfEmptySpacesBlock(int row, int col);
+	const bool numOfEmptySpaces(int minNumOfEmptySpaces);
 };
 #endif // GAME_H

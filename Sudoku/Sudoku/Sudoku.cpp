@@ -6,6 +6,10 @@ Sudoku::Sudoku() : correctInput(0), incorrectInput(0), gamesPlayed(0) {
 	matrix = std::vector<std::vector<int>>(N, std::vector<int>(N, 0));
 }
 
+Sudoku::~Sudoku(){
+	matrix.clear();
+}
+
 Sudoku::Sudoku(const std::vector<std::vector<int>>& m) : correctInput(0), incorrectInput(0), gamesPlayed(0) {
 	matrix = m;
 }
@@ -33,7 +37,12 @@ int Sudoku::getGamesPlayed() const {
 void Sudoku::displayBoard() {
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
-			std::cout << matrix[i][j] << " ";
+			if (matrix[i][j] == 0){
+				std::cout << "  ";
+			}
+			else {
+				std::cout << matrix[i][j] << " ";
+			}
 			if (j % 3 == 2 && j != 8) {
 				std::cout << "| ";
 			}

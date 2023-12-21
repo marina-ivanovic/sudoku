@@ -30,3 +30,23 @@ bool FileHandler::loadSudokuFromFile(const std::string& filename, Sudoku& sudoku
 	file.close();
 	return true;
 }
+
+bool FileHandler::saveSudokuToFile(const std::string& filename, const Sudoku& sudoku) {
+	std::ofstream file(filename);
+	if (!file.is_open()) {
+		std::cerr << "Error: Unable to open file: " << filename << std::endl;
+		return false;
+	}
+
+	// Write the Sudoku matrix to the file
+	for (const auto& row : (&sudoku)->getMatrix()) {
+		for (int value : row) {
+			file << value << " ";
+		}
+		file << "\n"; // Newline after each row
+	}
+
+	file.close();
+	std::cout << "Sudoku matrix saved to file: " << filename << std::endl;
+	return true;
+}

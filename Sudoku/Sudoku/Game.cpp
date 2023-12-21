@@ -3,16 +3,18 @@
 #include "Constants.h"
 #include <vector>
 #include <bitset>
+#include <cstdlib>
+#include <ctime>
 
-Game::Game(): sudoku(&Sudoku()) {}
+Game::Game(Sudoku* sudokuObj): sudoku(sudokuObj) {}
 
 const bool Game::validateBoard() {
-	std::vector<std::bitset<9>> rows(9), cols(9), blocks(9);
-	for (int i = 0; i < 9; ++i) {
-		for (int j = 0; j < 9; ++j) {
+	std::vector<std::bitset<N>> rows(N), cols(N), blocks(N);
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < N; ++j) {
 			if (sudoku->getMatrix()[i][j] != 0) {
 				int val = sudoku->getMatrix()[i][j] - 1;
-				int blockIdx = (i / 3) * 3 + j / 3;
+				int blockIdx = (i / B) * B + j / B;
 
 				if (rows[i].test(val) || cols[j].test(val) || blocks[blockIdx].test(val)) {
 					return false;
@@ -28,7 +30,7 @@ const bool Game::validateBoard() {
 }
 
 const bool Game::checkRow(int row, int val) {
-	for (int i = 0; i < 9; ++i) {
+	for (int i = 0; i < N; ++i) {
 		if (sudoku->getMatrix()[row][i] == val) {
 			return false;
 		}
@@ -46,10 +48,10 @@ const bool Game::checkColumn(int col, int val) {
 }
 
 const bool Game::checkBlock(int row, int col, int val) {
-	int startRow = row - (row % 3);
-	int startCol = col - (col % 3);
-	for (int i = 0; i < 3; ++i) {
-		for (int j = 0; j < 3; ++j) {
+	int startRow = row - (row % B);
+	int startCol = col - (col % B);
+	for (int i = 0; i < B; ++i) {
+		for (int j = 0; j < B; ++j) {
 			if (sudoku->getMatrix()[i + startRow][j + startCol] == val) {
 				return false;
 			}
@@ -68,23 +70,107 @@ const bool Game::isSafe(int row, int col, int val) {
 void Game::startGame() {
 
 }
-
 void Game::fillSudoku() {
-	//todo
+	fillDiagonalBoxes();
+	fillRemainingBoxes(0,3);
+}
+
+void Game::fillDiagonalBoxes() {
+	for (int i = 0; i < N; i = i + B) {
+		fillBox(i, i);
+	}
+}
+
+void Game::fillBox(int row, int col) {
+	for (int i = row; i < row + B; ++i) {
+		for (int j = col; j < col + B; ++j) {
+			int num;
+			std::srand(static_cast<unsigned int>(std::time(nullptr)));
+			do {
+				num = std::rand()%N + 1;
+			} while (!checkBlock(i, j, num));
+			sudoku->setValue(i, j, num);
+		}
+	}
+}
+
+bool Game::fillRemainingBoxes(int i, int j)
+{
+	if (j >= N && i < N - 1) {
+		i = i + 1;
+		j = 0;
+	}
+	if (i >= N && j >= N) {
+		return true;
+	}
+	if (i < B) {
+		if (j < B) {
+			j = B;
+		}
+	}
+	else if (i < N - B) {
+		if (j == (int)(i / B) * B) {
+			j = j + B;
+		}
+	}
+	else {
+		if (j == N - B) {
+			i = i + 1;
+			j = 0;
+			if (i >= N) {
+				return true;
+			}
+		}
+	}
+	for (int num = 1; num <= N; num++) {
+		if (isSafe(i, j, num)) {
+			sudoku->setValue(i,j,num);
+			if (fillRemainingBoxes(i, j + 1)) {
+				return true;
+			}
+			sudoku->setValue(i, j, 0);
+		}
+	}
+	return false;
+}
+
+const int Game::numOfEmptySpacesBlock(int row, int col) {
+	int startRow = row - (row % B);
+	int startCol = col - (col % B);
+	int counter = 0;
+	for (int i = 0; i < B; ++i) {
+		for (int j = 0; j < B; ++j) {
+			if (sudoku->getMatrix()[i + startRow][j + startCol] == 0) {
+				counter++;
+			}
+		}
+	}
+	return counter;
+}
+
+const bool Game::numOfEmptySpaces(int minNumOfEmptySpaces) {
+	for (int i = 0; i < N; i+=3) {
+		for (int j = 0; j < N; j+=3) {
+			if (numOfEmptySpacesBlock(i,j)<minNumOfEmptySpaces) {
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 void Game::generateSudoku() {
 	fillSudoku();
 	int i, j = 0;
-	int removed = 0;
-	while (solveSudoku(0, 0)) {
-		i = rand() % 9;
-		j = rand() % 9;
+	int minNumsToRemove = 3;
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+	do {
+		i = std::rand() % 9;
+		j = std::rand() % 9;
 
-		removed = sudoku->getMatrix()[i][j];
 		sudoku->setValue(i, j, 0);
-	}
-	sudoku->setValue(i, j, removed);
+	} while (!numOfEmptySpaces(minNumsToRemove));
+
 }
 
 const bool Game::solveSudoku(int row, int col) {
@@ -109,4 +195,10 @@ const bool Game::solveSudoku(int row, int col) {
 		}
 	}
 	return false;
+}
+
+const bool Game::isEmpty(int row, int col) {
+	// Your implementation goes here
+	// ...
+	return true;
 }
