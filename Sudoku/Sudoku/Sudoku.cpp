@@ -6,10 +6,6 @@ Sudoku::Sudoku() : correctInput(0), incorrectInput(0), gamesPlayed(0) {
 	matrix = std::vector<std::vector<int>>(N, std::vector<int>(N, 0));
 }
 
-Sudoku::~Sudoku(){
-	matrix.clear();
-}
-
 Sudoku::Sudoku(const std::vector<std::vector<int>>& m) : correctInput(0), incorrectInput(0), gamesPlayed(0) {
 	matrix = m;
 }

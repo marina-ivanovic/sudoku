@@ -14,7 +14,7 @@ public:
 	// Constructors
 	Sudoku();
 	Sudoku(const std::vector<std::vector<int>>& m);
-	~Sudoku();
+
 	// Getters and setters
 	const std::vector<std::vector<int>>& getMatrix() const;
 	void setValue(int row, int col, int value);

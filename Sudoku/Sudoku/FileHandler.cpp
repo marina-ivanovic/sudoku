@@ -38,12 +38,11 @@ bool FileHandler::saveSudokuToFile(const std::string& filename, const Sudoku& su
 		return false;
 	}
 
-	// Write the Sudoku matrix to the file
 	for (const auto& row : (&sudoku)->getMatrix()) {
 		for (int value : row) {
 			file << value << " ";
 		}
-		file << "\n"; // Newline after each row
+		file << "\n"; 
 	}
 
 	file.close();
