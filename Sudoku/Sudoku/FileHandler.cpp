@@ -25,7 +25,7 @@ bool FileHandler::loadSudokuFromFile(const std::string& filename, Sudoku& sudoku
 		board.push_back(row);
 	}
 
-	sudoku = Sudoku(board); // Update the Sudoku object with the loaded board
+	sudoku = Sudoku(board);
 
 	file.close();
 	return true;

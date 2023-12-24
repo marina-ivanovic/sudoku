@@ -69,3 +69,40 @@ const bool Validation::isSafe(const Sudoku& sudoku, int row, int col, int val) {
 	}
 	return false;
 }
+
+const int Validation::numOfEmptySpacesBlock(const Sudoku& sudoku, int row, int col) {
+	int startRow = row - (row % B);
+	int startCol = col - (col % B);
+	int counter = 0;
+	for (int i = 0; i < B; ++i) {
+		for (int j = 0; j < B; ++j) {
+			if (sudoku.getMatrix()[i + startRow][j + startCol] == 0) {
+				counter++;
+			}
+		}
+	}
+	return counter;
+}
+
+const int Validation::numOfEmptySpaces(const Sudoku& sudoku) {
+	int counter = 0;
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < N; ++j) {
+			if (sudoku.getMatrix()[i][j] == 0) {
+				counter++;
+			}
+		}
+	}
+	return counter;
+}
+
+const bool Validation::emptySpaces(const Sudoku& sudoku, int minNumOfEmptySpaces) {
+	for (int i = 0; i < N; i += 3) {
+		for (int j = 0; j < N; j += 3) {
+			if (numOfEmptySpacesBlock(sudoku, i, j)<minNumOfEmptySpaces) {
+				return false;
+			}
+		}
+	}
+	return true;
+}

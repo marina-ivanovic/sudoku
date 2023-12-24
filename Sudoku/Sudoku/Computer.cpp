@@ -50,7 +50,7 @@ void Computer::generateSudoku() {
 		j = std::rand() % 9;
 
 		sudoku->setValue(i, j, 0);
-	} while (!numOfEmptySpaces(minNumsToRemove));
+	} while (!Validation::emptySpaces(*sudoku, minNumsToRemove));
 	std::vector<std::vector<int>> tempMatrix = sudoku->getMatrix();
 	if (!solveSudoku()) {
 		eraseSudoku();
@@ -128,32 +128,6 @@ bool Computer::fillRemainingBoxes(int i, int j)
 	}
 	return false;
 }
-
-const int Computer::numOfEmptySpacesBlock(int row, int col) {
-	int startRow = row - (row % B);
-	int startCol = col - (col % B);
-	int counter = 0;
-	for (int i = 0; i < B; ++i) {
-		for (int j = 0; j < B; ++j) {
-			if (sudoku->getMatrix()[i + startRow][j + startCol] == 0) {
-				counter++;
-			}
-		}
-	}
-	return counter;
-}
-
-const bool Computer::numOfEmptySpaces(int minNumOfEmptySpaces) {
-	for (int i = 0; i < N; i += 3) {
-		for (int j = 0; j < N; j += 3) {
-			if (numOfEmptySpacesBlock(i, j)<minNumOfEmptySpaces) {
-				return false;
-			}
-		}
-	}
-	return true;
-}
-
 const bool Computer::isEmpty(int row, int col) {
 	if (sudoku->getMatrix()[row][col] == 0){
 		return true;

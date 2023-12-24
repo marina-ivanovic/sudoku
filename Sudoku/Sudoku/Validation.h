@@ -10,5 +10,9 @@ public:
 	static const bool checkColumn(const Sudoku& sudoku, int col, int val);
 	static const bool checkBlock(const Sudoku& sudoku, int row, int col, int val);
 	static const bool isEmpty(const Sudoku& sudoku, int row, int col);
+
+	static const int numOfEmptySpacesBlock(const Sudoku& sudoku, int row, int col);
+	static const int numOfEmptySpaces(const Sudoku& sudoku);
+	static const bool emptySpaces(const Sudoku& sudoku, int minNumOfEmptySpaces);
 };
 #endif // VALIDATION_H

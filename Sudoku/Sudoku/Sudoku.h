@@ -19,9 +19,15 @@ public:
 	const std::vector<std::vector<int>>& getMatrix() const;
 	void setValue(int row, int col, int value);
 	int getCorrectInput() const;
+	void setCorrectInput();
 	int getIncorrectInput() const;
+	void setIncorrectInput();
 	int getGamesPlayed() const;
+	void setGamesPlayed();
+
+	void initStats();
 
 	void displayBoard();
+	void displayStats();
 };
 #endif // SUDOKU_H
