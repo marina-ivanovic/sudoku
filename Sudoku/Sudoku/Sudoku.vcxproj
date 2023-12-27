@@ -160,6 +160,7 @@
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Sudoku.h" />
+    <ClInclude Include="Testing.h" />
     <ClInclude Include="Validation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

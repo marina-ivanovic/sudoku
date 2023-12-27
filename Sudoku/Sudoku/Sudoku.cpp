@@ -30,16 +30,16 @@ int Sudoku::getGamesPlayed() const {
 	return gamesPlayed;
 }
 
-void Sudoku::setCorrectInput() {
-	correctInput++;
+void Sudoku::setCorrectInput(int correct) {
+	correctInput = correct;
 }
 
 void Sudoku::setGamesPlayed() {
 	gamesPlayed++;
 }
 
-void Sudoku::setIncorrectInput() {
-	incorrectInput++;
+void Sudoku::setIncorrectInput(int mistakes) {
+	incorrectInput = mistakes;
 }
 
 void Sudoku::initStats() {

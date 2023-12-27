@@ -1,29 +1,60 @@
 #include "Validation.h"
 #include "Constants.h"
 #include "Sudoku.h"
-#include <vector>
-#include <bitset>
 
-const bool Validation::validateBoard(const Sudoku& sudoku) {
-	std::vector<std::bitset<N>> rows(N), cols(N), blocks(N);
+const int Validation::validateBoard(const Sudoku& sudoku) {
+	int mistakes = 0;
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
+			bool hasMistake = false;
 			if (sudoku.getMatrix()[i][j] != 0) {
-				int val = sudoku.getMatrix()[i][j] - 1;
-				int blockIdx = (i / B) * B + j / B;
+				int val = sudoku.getMatrix()[i][j];
 
-				if (rows[i].test(val) || cols[j].test(val) || blocks[blockIdx].test(val)) {
-					return false;
+				// Checks the whole block
+				int startRow = (i / B) * B;
+				int startCol = (j / B) * B;
+				for (int row = startRow; row < startRow + B; ++row) {
+					for (int col = startCol; col < startCol + B; ++col) {
+						if (row != i && col != j && sudoku.getMatrix()[row][col] == val) {
+							mistakes++;
+							hasMistake = true;
+						}
+						else if (row == i && col!=j && sudoku.getMatrix()[row][col] == val) {
+							mistakes--;
+						}
+						else if (col == j && row != i && sudoku.getMatrix()[row][col] == val) {
+							mistakes--;
+						}
+					}
 				}
 
-				rows[i].set(val);
-				cols[j].set(val);
-				blocks[blockIdx].set(val);
+				for (int k = 0; k < N; ++k) {
+					if (k != j && sudoku.getMatrix()[i][k] == val) {
+						if (hasMistake) {
+							mistakes--;
+						}
+						else{
+							mistakes++;
+						}
+					}
+				}
+
+				for (int k = 0; k < N; ++k) {
+					if (k != i && sudoku.getMatrix()[k][j] == val) {
+						if (hasMistake) {
+							mistakes--;
+						}
+						else {
+							mistakes++;
+						}
+					}
+				}
 			}
 		}
 	}
-	return true;
+	return mistakes/2;
 }
+
 
 const bool Validation::checkRow(const Sudoku& sudoku, int row, int val){
 	for (int i = 0; i < N; ++i) {
@@ -34,7 +65,7 @@ const bool Validation::checkRow(const Sudoku& sudoku, int row, int val){
 	return true;
 }
 
-const bool Validation::checkColumn(const Sudoku& sudoku, int col, int val) {
+const bool Validation::checkColumn(const Sudoku& sudoku,int col, int val) {
 	for (int i = 0; i < 9; ++i) {
 		if (sudoku.getMatrix()[i][col] == val) {
 			return false;
@@ -101,6 +132,26 @@ const bool Validation::emptySpaces(const Sudoku& sudoku, int minNumOfEmptySpaces
 		for (int j = 0; j < N; j += 3) {
 			if (numOfEmptySpacesBlock(sudoku, i, j)<minNumOfEmptySpaces) {
 				return false;
+			}
+		}
+	}
+	return true;
+}
+
+const bool Validation::isFilled(const Sudoku& sudoku) {
+	if (numOfEmptySpaces(sudoku) == 0) {
+		return true;
+	}
+	return false;
+}
+
+const bool Validation::completedCorrectPuzzle(const Sudoku& baseSudoku, const Sudoku& solvedSudoku) {
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < N; ++j) {
+			if (baseSudoku.getMatrix()[i][j] != 0) {
+				if (baseSudoku.getMatrix()[i][j] != solvedSudoku.getMatrix()[i][j]) {
+					return false;
+				}
 			}
 		}
 	}

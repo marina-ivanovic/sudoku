@@ -4,106 +4,130 @@
 #include "Validation.h"
 #include "FileHandler.h"
 #include <iostream>
+#include <string>
 
-Game::Game(Sudoku* sudokuObj): sudoku(sudokuObj) {}
+Game::Game(Sudoku* sudokuObj, std::string fileInput, std::string fileOutput): sudoku(sudokuObj), fileInput(fileInput),fileOutput(fileOutput) {}
 
 int Game::startGame() {
 	Computer computer(sudoku);
 	sudoku->initStats();
-	std::cout << "====================================================================" << std::endl;
-	std::cout << "                              SUDOKU                                " << std::endl;
-	std::cout << "====================================================================" << std::endl;
-	std::cout << ">> CHOOSE AN OPTION: " << std::endl;
-	std::cout << "[ 1 ] Choose a file to load a sudoku game from\n[ 2 ] Generate a new sudoku puzzle\n[ 0 ] Exit" << std::endl;
+	displayMenu();
 	int choice;
 	std::cin >> choice;
-	if (choice == 1) {
-		std::string filename;
-		std::cout << "Input the file name (without extention) from which you want to load the puzzle >>";
-		std::cin >> filename;
-		FileHandler::loadSudokuFromFile("../data/" + filename + ".txt", *sudoku);
-		sudoku->displayBoard();
-	}
-	else if (choice == 2) {
-		std::cout << "Generating puzzle..." << std::endl;
-		computer.generateSudoku();
-		std::cout << "Puzzle generated" << std::endl;
-		sudoku->displayBoard();
-		std::cout << "Would you like to save this generated puzzle to a file?\n[ 1 ] Yes\n[ 2 ] No" << std::endl;
-		std::cin >> choice;
 
-		if (choice == 1) {
-			std::string filename;
-			std::cout << "Insert the name of the file where you want to save the puzzle in (without extention) >>";
-			std::cin >> filename;
-			FileHandler::saveSudokuToFile("../data/"+filename+".txt", *sudoku);
-		}
-	}
-	else {
+	switch (choice) {
+	case 1:
+		loadGame();
+		break;
+	case 2:
+		generateNewGame(computer);
+		break;
+	case 0:
 		return 0;
+	default:
+		std::cout << "Invalid choice. Please choose a valid option." << std::endl;
+		break;
 	}
-	std::cout << "Would you like to solve this puzzle or another one?\n[ 1 ] This one\n[ 2 ] Another puzzle" << std::endl;
-	std::cin >> choice;
-	if (choice == 2) {
-		return 0;
+
+	// If we loaded in a complete puzzle - show stats
+	if (Validation::isFilled(*sudoku)) {
+		calculateStats();
+		return 1;
 	}
 	startSolving(computer);
 
 	return 1;
 }
 
-int Game::startSolving(Computer& computer) {
+void Game::displayMenu() {
+	std::cout << "====================================================================" << std::endl;
+	std::cout << "                              SUDOKU                                " << std::endl;
+	std::cout << "====================================================================" << std::endl;
+	std::cout << ">> CHOOSE AN OPTION: " << std::endl;
+	std::cout << "[ 1 ] Load a sudoku game\n[ 2 ] Generate a new sudoku puzzle\n[ 0 ] Exit" << std::endl;
+}
+
+bool Game::loadGame() {
+	// Incorrectly loaded puzzle
+	if (!FileHandler::loadSudokuFromFile(fileInput, *sudoku)) {
+		return false;
+	}
+	return true;
+
+}
+
+void Game::generateNewGame(Computer& computer) {
+	std::cout << "Generating puzzle..." << std::endl;
+	computer.generateSudoku();
+	std::cout << "Puzzle generated" << std::endl;
+	saveSudoku();
+}
+
+bool Game::saveSudoku() {
+	return (FileHandler::saveSudokuToFile(fileInput, *sudoku));
+}
+
+void Game::startSolving(Computer& computer) {
 	sudoku->displayBoard();
 	int choice;
 	std::cout << "Would you like to solve the puzzle or let the computer solve it?\n[ 1 ] I want to solve it\n[ 2 ] Let the computer solve it" << std::endl;
 	std::cin >> choice;
-	if (choice == 1) {
+
+	switch (choice) {
+	case 1:
 		playerSolving();
+		break;
+	case 2:
+		computerSolving(computer);
+		break;
+	default:
+		std::cout << "Invalid choice. Please choose a valid option." << std::endl;
+		break;
 	}
-	else if (choice == 2) {
-		std::cout << "Solving the puzzle..." << std::endl;
-		if (computer.solveSudoku()) {
-			std::cout << "Successfully solved!" << std::endl;
-			sudoku->displayBoard();
-			sudoku->setGamesPlayed();
-			sudoku->displayStats();
-			return 0;
-		}
-		else {
-			std::cout << "ERROR: Puzzle unsolvable" << std::endl;
-			return 1;
-		}
+}
+
+void Game::computerSolving(Computer& computer) {
+	std::cout << "Solving the puzzle..." << std::endl;
+	if (computer.solveSudoku()) {
+		std::cout << "Successfully solved!" << std::endl;
+		
+		calculateStats();
+		FileHandler::saveSudokuToFile(fileOutput, *sudoku);
 	}
-	return 0;
+	else {
+		std::cout << "ERROR: Puzzle unsolvable" << std::endl;
+	}
 }
 
 void Game::playerSolving() {
-	while(true){
-		if (Validation::numOfEmptySpaces(*sudoku) == 0) {
-			break;
-		}
-		int i, j, val;
-		std::cout << "Input coordinates and value of the number you want to place - row (1-9) column (1-9) value (1-9) (seperated by space) >>";
-		std::cin >> i >> j >> val;
-		if (i < 1 || i > 9 || j < 1 || j > 9 || val < 1 || val>9) {
-			std::cout << "Incorrect coordinates or value, numbers need to be 1-9" << std::endl;
-			continue;
-		}
-		i--;
-		j--;
-		if (!Validation::isEmpty(*sudoku, i, j)) {
-			std::cout << "Must choose an empty space" << std::endl;
-			continue;
-		}
-		if (!Validation::isSafe(*sudoku, i, j, val)) {
-			sudoku->setIncorrectInput();
+	Sudoku tempSudoku;
+	FileHandler::loadSudokuFromFile(fileOutput, tempSudoku);
+
+	if (Validation::isFilled(tempSudoku)) {
+		if (!Validation::completedCorrectPuzzle(*sudoku, tempSudoku)) {
+			std::cout << "Provided solution is not the solution to the puzzle. Please try again after solving." << std::endl;
 		}
 		else {
-			sudoku->setCorrectInput();
+				
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
+					sudoku->setValue(i,j,tempSudoku.getMatrix()[i][j]);
+				}
+			}
+			calculateStats();
 		}
-		sudoku->setValue(i, j, val);
-		sudoku->displayBoard();
 	}
+	else {
+		std::cout << "Incompleted puzzle." << std::endl;
+	}
+}
+
+void Game::calculateStats() {
+	sudoku->displayBoard();
 	sudoku->setGamesPlayed();
+	int mistakes = Validation::validateBoard(*sudoku);
+	sudoku->setIncorrectInput(mistakes);
+	sudoku->setCorrectInput(81 - mistakes);
 	sudoku->displayStats();
 }
+
