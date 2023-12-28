@@ -9,10 +9,8 @@ private:
 	// Private functions for Sudoku solving and generation
 
 	// Solves Sudoku recursively, parameters are starting row and colummn
+	// Returns true if successfully solved
 	const bool solveSudoku(int row, int col);
-
-	// Checks if a cell is empty, parameters are row and column number
-	const bool isEmpty(int row, int col);
 
 	// Fills the Sudoku grid with pseudorandom numbers
 	void fillSudoku();

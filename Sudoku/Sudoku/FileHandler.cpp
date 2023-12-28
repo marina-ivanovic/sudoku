@@ -7,7 +7,7 @@
 bool FileHandler::loadSudokuFromFile(const std::string& filename, Sudoku& sudoku) {
 	std::ifstream file(filename);
 	if (!file.is_open()) {
-		std::cerr << "Unable to open file " << filename << std::endl;
+		//std::cerr << "Unable to open file " << filename << std::endl;
 		return false;
 	}
 
@@ -17,15 +17,13 @@ bool FileHandler::loadSudokuFromFile(const std::string& filename, Sudoku& sudoku
 		std::vector<int> row;
 		for (int j = 0; j < 9; ++j) {
 			if (!(file >> value)) {
-				std::cerr << "Error reading Sudoku values from file" << std::endl;
+				//std::cerr << "Error reading Sudoku values from file" << std::endl;
 				return false;
 			}
 			row.push_back(value);
+			sudoku.setValue(i, j, value);
 		}
-		board.push_back(row);
 	}
-
-	sudoku = Sudoku(board);
 
 	file.close();
 	return true;
@@ -34,7 +32,7 @@ bool FileHandler::loadSudokuFromFile(const std::string& filename, Sudoku& sudoku
 bool FileHandler::saveSudokuToFile(const std::string& filename, const Sudoku& sudoku) {
 	std::ofstream file(filename);
 	if (!file.is_open()) {
-		std::cerr << "Error: Unable to open file: " << filename << std::endl;
+		//std::cerr << "Error: Unable to open file: " << filename << std::endl;
 		return false;
 	}
 
@@ -46,6 +44,6 @@ bool FileHandler::saveSudokuToFile(const std::string& filename, const Sudoku& su
 	}
 
 	file.close();
-	std::cout << "Sudoku matrix saved to file: " << filename << std::endl;
+	//std::cout << "Sudoku matrix saved to file: " << filename << std::endl;
 	return true;
 }

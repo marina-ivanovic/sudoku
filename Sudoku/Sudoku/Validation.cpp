@@ -6,47 +6,53 @@ const int Validation::validateBoard(const Sudoku& sudoku) {
 	int mistakes = 0;
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
+
+			int val = sudoku.getMatrix()[i][j];
+
+			if (val == EMPTY){
+				continue;
+			}
+
 			bool hasMistake = false;
-			if (sudoku.getMatrix()[i][j] != 0) {
-				int val = sudoku.getMatrix()[i][j];
 
-				// Checks the whole block
-				int startRow = (i / B) * B;
-				int startCol = (j / B) * B;
-				for (int row = startRow; row < startRow + B; ++row) {
-					for (int col = startCol; col < startCol + B; ++col) {
-						if (row != i && col != j && sudoku.getMatrix()[row][col] == val) {
-							mistakes++;
-							hasMistake = true;
-						}
-						else if (row == i && col!=j && sudoku.getMatrix()[row][col] == val) {
-							mistakes--;
-						}
-						else if (col == j && row != i && sudoku.getMatrix()[row][col] == val) {
-							mistakes--;
-						}
+			// Checks the whole block
+			int startRow = (i / B) * B;
+			int startCol = (j / B) * B;
+
+			for (int row = startRow; row < startRow + B; ++row) {
+				for (int col = startCol; col < startCol + B; ++col) {
+					if (row != i && col != j && sudoku.getMatrix()[row][col] == val) {
+						mistakes++;
+						hasMistake = true;
+					}
+					// To get rid of double counting of mistakes
+					else if (row == i && col!=j && sudoku.getMatrix()[row][col] == val) {
+						mistakes--;
+					}
+					else if (col == j && row != i && sudoku.getMatrix()[row][col] == val) {
+						mistakes--;
 					}
 				}
+			}
 
-				for (int k = 0; k < N; ++k) {
-					if (k != j && sudoku.getMatrix()[i][k] == val) {
-						if (hasMistake) {
-							mistakes--;
-						}
-						else{
-							mistakes++;
-						}
+			for (int k = 0; k < N; ++k) {
+				if (k != j && sudoku.getMatrix()[i][k] == val) {
+					if (hasMistake) {
+						mistakes--;
+					}
+					else{
+						mistakes++;
 					}
 				}
+			}
 
-				for (int k = 0; k < N; ++k) {
-					if (k != i && sudoku.getMatrix()[k][j] == val) {
-						if (hasMistake) {
-							mistakes--;
-						}
-						else {
-							mistakes++;
-						}
+			for (int k = 0; k < N; ++k) {
+				if (k != i && sudoku.getMatrix()[k][j] == val) {
+					if (hasMistake) {
+						mistakes--;
+					}
+					else {
+						mistakes++;
 					}
 				}
 			}
@@ -66,7 +72,7 @@ const bool Validation::checkRow(const Sudoku& sudoku, int row, int val){
 }
 
 const bool Validation::checkColumn(const Sudoku& sudoku,int col, int val) {
-	for (int i = 0; i < 9; ++i) {
+	for (int i = 0; i < N; ++i) {
 		if (sudoku.getMatrix()[i][col] == val) {
 			return false;
 		}
@@ -88,7 +94,7 @@ const bool Validation::checkBlock(const Sudoku& sudoku, int row, int col, int va
 }
 
 const bool Validation::isEmpty(const Sudoku& sudoku, int row, int col){
-	if (sudoku.getMatrix()[row][col] == 0) {
+	if (sudoku.getMatrix()[row][col] == EMPTY) {
 		return true;
 	}
 	return false;
@@ -107,7 +113,7 @@ const int Validation::numOfEmptySpacesBlock(const Sudoku& sudoku, int row, int c
 	int counter = 0;
 	for (int i = 0; i < B; ++i) {
 		for (int j = 0; j < B; ++j) {
-			if (sudoku.getMatrix()[i + startRow][j + startCol] == 0) {
+			if (sudoku.getMatrix()[i + startRow][j + startCol] == EMPTY) {
 				counter++;
 			}
 		}
@@ -119,7 +125,7 @@ const int Validation::numOfEmptySpaces(const Sudoku& sudoku) {
 	int counter = 0;
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
-			if (sudoku.getMatrix()[i][j] == 0) {
+			if (sudoku.getMatrix()[i][j] == EMPTY) {
 				counter++;
 			}
 		}
@@ -148,7 +154,7 @@ const bool Validation::isFilled(const Sudoku& sudoku) {
 const bool Validation::completedCorrectPuzzle(const Sudoku& baseSudoku, const Sudoku& solvedSudoku) {
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
-			if (baseSudoku.getMatrix()[i][j] != 0) {
+			if (baseSudoku.getMatrix()[i][j] != EMPTY) {
 				if (baseSudoku.getMatrix()[i][j] != solvedSudoku.getMatrix()[i][j]) {
 					return false;
 				}

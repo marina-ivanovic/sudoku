@@ -13,6 +13,7 @@ void Testing::testAll() {
 	testRowValidation();
 	testColumnValidation();
 	testBlockValidation();
+	testSolutionForTheBaseGame();
 	testLoadFile();
 	testSaveFile();
 }

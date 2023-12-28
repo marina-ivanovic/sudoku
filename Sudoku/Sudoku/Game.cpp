@@ -8,6 +8,14 @@
 
 Game::Game(Sudoku* sudokuObj, std::string fileInput, std::string fileOutput): sudoku(sudokuObj), fileInput(fileInput),fileOutput(fileOutput) {}
 
+void Game::displayMenu() {
+	std::cout << "====================================================================" << std::endl;
+	std::cout << "                              SUDOKU                                " << std::endl;
+	std::cout << "====================================================================" << std::endl;
+	std::cout << ">> CHOOSE AN OPTION: " << std::endl;
+	std::cout << "[ 1 ] Load a sudoku game\n[ 2 ] Generate a new sudoku puzzle\n[ 0 ] Exit" << std::endl;
+}
+
 int Game::startGame() {
 	Computer computer(sudoku);
 	sudoku->initStats();
@@ -39,21 +47,12 @@ int Game::startGame() {
 	return 1;
 }
 
-void Game::displayMenu() {
-	std::cout << "====================================================================" << std::endl;
-	std::cout << "                              SUDOKU                                " << std::endl;
-	std::cout << "====================================================================" << std::endl;
-	std::cout << ">> CHOOSE AN OPTION: " << std::endl;
-	std::cout << "[ 1 ] Load a sudoku game\n[ 2 ] Generate a new sudoku puzzle\n[ 0 ] Exit" << std::endl;
+bool Game::loadGame() {
+	return FileHandler::loadSudokuFromFile(fileInput, *sudoku);
 }
 
-bool Game::loadGame() {
-	// Incorrectly loaded puzzle
-	if (!FileHandler::loadSudokuFromFile(fileInput, *sudoku)) {
-		return false;
-	}
-	return true;
-
+bool Game::saveSudoku() {
+	return (FileHandler::saveSudokuToFile(fileInput, *sudoku));
 }
 
 void Game::generateNewGame(Computer& computer) {
@@ -63,9 +62,6 @@ void Game::generateNewGame(Computer& computer) {
 	saveSudoku();
 }
 
-bool Game::saveSudoku() {
-	return (FileHandler::saveSudokuToFile(fileInput, *sudoku));
-}
 
 void Game::startSolving(Computer& computer) {
 	sudoku->displayBoard();
@@ -103,31 +99,35 @@ void Game::playerSolving() {
 	Sudoku tempSudoku;
 	FileHandler::loadSudokuFromFile(fileOutput, tempSudoku);
 
-	if (Validation::isFilled(tempSudoku)) {
-		if (!Validation::completedCorrectPuzzle(*sudoku, tempSudoku)) {
-			std::cout << "Provided solution is not the solution to the puzzle. Please try again after solving." << std::endl;
-		}
-		else {
-				
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < N; j++) {
-					sudoku->setValue(i,j,tempSudoku.getMatrix()[i][j]);
-				}
-			}
-			calculateStats();
+	if (!Validation::completedCorrectPuzzle(*sudoku, tempSudoku)) {
+		std::cout << "Provided solution is not the solution to the puzzle. Please try again after solving." << std::endl;
+		return;
+	}
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			sudoku->setValue(i, j, tempSudoku.getMatrix()[i][j]);
 		}
 	}
+	if (!Validation::isFilled(*sudoku)) {
+		std::cout << "Provided solution is not finished. Please try again after solving." << std::endl;
+		return;
+	}
+
 	else {
-		std::cout << "Incompleted puzzle." << std::endl;
+		calculateStats();
 	}
 }
 
 void Game::calculateStats() {
 	sudoku->displayBoard();
-	sudoku->setGamesPlayed();
+
+	// Validating the board + counting the number of mistakes the player/computer has made
 	int mistakes = Validation::validateBoard(*sudoku);
+
+	sudoku->setGamesPlayed();
 	sudoku->setIncorrectInput(mistakes);
 	sudoku->setCorrectInput(81 - mistakes);
+
 	sudoku->displayStats();
 }
-

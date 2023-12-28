@@ -166,12 +166,6 @@ bool Computer::fillRemainingBoxes(int i, int j)
 	}
 	return false;
 }
-const bool Computer::isEmpty(int row, int col) {
-	if (sudoku->getMatrix()[row][col] == EMPTY){
-		return true;
-	}
-	return false;
-}
 
 void Computer::eraseSudoku() {
 	for (int i = 0; i < N; i++) {

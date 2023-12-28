@@ -1,8 +1,5 @@
 #include "Sudoku.h"
 #include "Game.h"
-#include "Computer.h"
-#include "Validation.h"
-#include "FileHandler.h"
 #include "Testing.h"
 #include <iostream>
 #include <string>
@@ -20,5 +17,4 @@ int main(int argc, char* argv[]) {
 	Game newGame(&sudoku, fileInput, fileOutput);
 	while (newGame.startGame() == 1);
 	//Testing::testAll();
-
 }

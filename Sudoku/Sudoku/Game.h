@@ -12,18 +12,21 @@ private:
 	std::string fileInput;
 	std::string fileOutput;
 public:
-
-	void displayMenu();
+	
 	// Constructor to initialize the Game object with a Sudoku object (defaults to nullptr)
 	Game(Sudoku* sudokuObj, std::string fileInput, std::string fileOutput);
 
-	// Function that gets the filename and enables loading the sudoku puzzle from a file
-	bool loadGame();
+	// Prints out the basic menu layout
+	void displayMenu();
 
+	// Function that calls the generative function from the computer object
 	void generateNewGame(Computer& computer);
 
-	// Function that gets the filename and enables saving the sudoku puzzle
+	// Function that calls the saving function from FileHelper module
 	bool saveSudoku();
+
+	// Function that calls the loading function from FileHelper module
+	bool loadGame();
 
 	// Function to start the Sudoku game
 	// Returns an integer representing the game status (1 - continue the game, 0 - end the game)
@@ -39,6 +42,7 @@ public:
 	// Function for player interaction to solve the Sudoku puzzle
 	void playerSolving();
 
+	// Function for validation and calculating the number of errors that have been made
 	void calculateStats();
 };
 

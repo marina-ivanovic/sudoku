@@ -31,4 +31,4 @@ public:
 	// Testing FileHandler::saveSudokuToFile
 	static void testSaveFile();
 };
-#endif // COMPUTER_H
+#endif // TESTING_H
